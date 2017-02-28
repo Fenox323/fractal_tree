@@ -1,0 +1,152 @@
+var points = [];
+var current = 0;
+var maximum = 0;
+var count = 0;
+var passed = [];
+var now = 0;
+var pressed = false;
+
+var minLength = 4;
+var maxLength = 6;
+
+var one = {
+	navailable: [3, 7, 9],
+	pair: [2, 4, 5]
+}
+var two = {
+	navailable: [8],
+	pair: [5]
+}
+var three = {
+	navailable: [1, 7, 9],
+	pair: [2, 5, 6]
+}
+var four = {
+	navailable: [6],
+	pair: [5]
+}
+var five = {
+	navailable: [],
+	pair: []
+}
+var six = {
+	navailable: [4],
+	pair: [5]
+}
+var seven = {
+	navailable: [1, 3, 9],
+	pair: [4, 5, 8]
+}
+var eight = {
+	navailable: [2],
+	pair: [5]
+}
+var nine = {
+	navailable: [1, 3, 7],
+	pair: [5, 6, 8]
+}
+
+var rules = [one, two, three, four, five, six, seven, eight, nine];
+
+function setup() {
+	createCanvas(600,600);
+	for (var i=0 ; i<9 ; i++) {
+		var x = (i%3+1)*width/4;
+		var y = (floor(i/3)+1)*height/4;
+		points[i] = createVector(x,y);
+	}
+	
+	for (var i=0 ; i<minLength ; i++) {
+		current += pow(10, i);
+	}
+	for (var i=0 ; i<maxLength ; i++) {
+		maximum += pow(10,i)*9;
+	}
+	
+	for (current ; current<=maximum ; current++) {
+		var parts = [];
+		var available = true;
+		
+		for (var j=0 ; j<current.toString().length ; j++) {
+			parts[j] = current.toString().charAt(j);
+		}
+		
+		for (var j=0 ; j<parts.length ; j++) {
+			if (parts[j] == 0) {
+				available = false;
+				break;
+			}
+			else if (j != parts.length-1){
+				for (var k=j+1 ; k<parts.length ; k++) {
+					if (parts[j]==parts[k]) {
+						available = false;
+						break;
+					}
+				}
+			}
+			if (!available) break;
+		}
+		
+		if (available) {
+			for (var j=0 ; j<parts.length-1 ; j++) {
+				var part = Number(parts[j]);
+				var contains = rules[part-1].navailable.indexOf(Number(parts[j+1]));
+				if (contains != -1) {
+					if (parts.indexOf(rules[part-1].pair[contains].toString()) >= j || parts.indexOf(rules[part-1].pair[contains].toString()) == -1) {
+						available = false;
+						break;
+					}
+				}
+				if (!available) break;
+			}
+		}
+		
+		if (available) {
+			count++;
+			passed.push(current);
+		}
+	}
+}
+
+function draw() {
+	background(51);
+	for (var i=0 ; i<9 ; i++) {
+		noStroke();
+		fill(255,200,0);
+		ellipse(points[i].x, points[i].y, 80, 80);
+	}
+	
+	for (var i=0 ; i<passed[now].toString().length ; i++) {
+		var number = Number(passed[now].toString().charAt(i));
+		
+		strokeWeight(40);
+		fill(40, 250, 170);
+		noStroke();
+		ellipse(points[number-1].x, points[number-1].y, 80, 80);
+		stroke(40, 250, 170, 30);
+		
+		if (i != passed[now].toString().length-1) {
+			var nextNumber = Number(passed[now].toString().charAt(i+1));
+			line(points[number-1].x, points[number-1].y, points[nextNumber-1].x, points[nextNumber-1].y);
+		}
+	}
+	print(passed[now]);
+	
+	now++;
+	if (now == passed.length) {
+		noLoop();
+		print("total: " + count);
+	}
+}
+
+function mousePressed() {
+	if (pressed) {
+		loop();
+		pressed = false;
+	}
+	else {
+		noLoop();
+		print("total: " + count);
+		pressed = true;
+	}
+}
