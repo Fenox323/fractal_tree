@@ -1,0 +1,76 @@
+var angle = 0;
+var length1 = 0.67;
+var length2 = 0.67;
+var len = 150;
+var count = 0;
+var c;
+var speed = 0;
+var time = 0;
+var rot1 = 0;
+var rot2 = 0;
+
+// min angle = 0
+// max angle = Math.PI/4
+// frames = 30
+
+function setup() {
+	createCanvas(600, 600);
+	// sliderAngle = createSlider(0, Math.PI, angle, 0.01);
+	// sliderLength1 = createSlider(0.2, 0.7, length, 0.01);
+	// sliderLength2 = createSlider(0.2, 0.7, length, 0.01);
+	// sliderLen = createSlider(30, 200, len, 0.01);
+	// sliderRot1 = createSlider(-Math.PI/5, Math.PI/5, rot1, 0.01);
+	// sliderRot2 = createSlider(-Math.PI/5, Math.PI/5, rot1, 0.01);
+}
+
+function draw() {
+	background(51);
+	
+	// len = sliderLen.value();
+	// length1 = sliderLength1.value();
+	// length2 = sliderLength2.value();
+	// angle = sliderAngle.value();
+	// rot1 = sliderRot1.value();
+	// rot2 = sliderRot2.value();
+	c = 0;
+	
+	stroke(255);
+	strokeWeight(2);
+	translate(300, height)
+	branch(len, c);
+	
+	if (angle<Math.PI/4) {
+		if (angle<=0.3) {
+			speed += 0.005;
+		}
+		else if (angle>=0.56 && speed>0) {
+			speed -= 0.01;
+		}
+		angle += speed;
+	}
+	if (speed<0) {
+		time++;
+		if (time == 3 || time == 4) {
+			speed += 0.002;
+		}
+		if (time>5) {
+			noLoop();
+		}
+	}
+}
+
+function branch(len, c) {
+	line(0, 0, 0, -len);
+	translate(0, -len);
+	if (len>3){
+		if (c>3) {
+			stroke(100, 255, 100);
+		}
+		push();
+		rotate(angle+rot1);
+		branch(len*length1, c+1);
+		pop();
+		rotate(-angle+rot2);
+		branch(len*length2, c+1);
+	}
+}
