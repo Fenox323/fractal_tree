@@ -1,12 +1,24 @@
 
-// axiom: F--F--F
-// rule: F --> F+F--F+F
+var axiom = "F--F--F";
+var action = ["F", "-", "+"];
+var reaction = [r1, r2, r3]
+
+function r1() {
+	line(0, 0, len, 0);
+	translate(len, 0);
+}
+function r2() {
+	rotate(-Math.PI/3);
+}
+function r3() {
+	rotate(Math.PI/3);
+}
+
+var transfer = ["F"]
+var answer = ["F+F--F+F"]
 
 var startLen = 300;
 var len = startLen;
-var angle = Math.PI/3;
-var axiom = "F--F--F";
-var rule = "F+F--F+F";
 var precision = 3;
 
 function setup() {
@@ -22,14 +34,9 @@ function setup() {
 	
 	for (var i=0 ; i<axiom.length ; i++) {
 		var cur = axiom.charAt(i);
-		
-		if (cur == "F") {
-			line(0, 0, len, 0);
-			translate(len, 0);
-		} else if (cur == "-") {
-			rotate(-angle);
-		} else if (cur == "+") {
-			rotate(angle);
+		var num = action.indexOf(cur);
+		if (num>=0) {
+			reaction[num]();
 		}
 	}
 }
@@ -38,15 +45,11 @@ function getAxiom() {
 	var newAxiom = "";
 	for (var i=0 ; i<axiom.length ; i++) {
 		var cur = axiom.charAt(i);
-		if (cur == "F") {
-			newAxiom += rule;
+		var num = transfer.indexOf(cur);
+		if (num>=0) {
+			newAxiom += answer[num];
 		}
-		else if (cur == "-") {
-			newAxiom += "-";
-		}
-		else if (cur == "+") {
-			newAxiom += "+";
-		}
+		else newAxiom += cur;
 	}
 	axiom = newAxiom;
 	len /= 3;
