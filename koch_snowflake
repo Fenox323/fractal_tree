@@ -1,0 +1,53 @@
+
+// axiom: F--F--F
+// rule: F --> F+F--F+F
+
+var startLen = 300;
+var len = startLen;
+var angle = Math.PI/3;
+var axiom = "F--F--F";
+var rule = "F+F--F+F";
+var precision = 3;
+
+function setup() {
+	createCanvas(600, 600);	
+	background(51);
+	stroke(255);
+	
+	translate(width/2-startLen/2, height/2+startLen/3);
+	
+	while(len>=precision) {
+		getAxiom();
+	}
+	
+	for (var i=0 ; i<axiom.length ; i++) {
+		var cur = axiom.charAt(i);
+		
+		if (cur == "F") {
+			line(0, 0, len, 0);
+			translate(len, 0);
+		} else if (cur == "-") {
+			rotate(-angle);
+		} else if (cur == "+") {
+			rotate(angle);
+		}
+	}
+}
+
+function getAxiom() {
+	var newAxiom = "";
+	for (var i=0 ; i<axiom.length ; i++) {
+		var cur = axiom.charAt(i);
+		if (cur == "F") {
+			newAxiom += rule;
+		}
+		else if (cur == "-") {
+			newAxiom += "-";
+		}
+		else if (cur == "+") {
+			newAxiom += "+";
+		}
+	}
+	axiom = newAxiom;
+	len /= 3;
+}
