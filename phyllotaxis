@@ -1,0 +1,82 @@
+
+// BaseAngle: Math.PI/(180/137.5)
+
+var angle;
+var dot;
+var mult;
+var d;
+var r;
+var g;
+var b;
+var cMax = 255;
+var cMin = 180;
+var turn;
+
+function setup() {
+	createCanvas(600, 600);
+	background(51);
+	strokeWeight(2);
+	translate(width/2, height/2);
+	
+	angle = Math.PI/(180/137.5);
+	dot = 1;
+	mult = 4;
+	turn = 1;
+	
+	r = cMax;
+	g = cMin;
+	b = cMin;
+	
+	stroke(r, g, b);
+	point(0.0);
+}
+
+function draw(){
+	translate(width/2, height/2);
+	rotate(angle*dot);
+	
+	switch (turn) {
+		case 1: {
+			b += 0.25;
+			if (b == cMax) turn = 2;
+			break;
+		}
+		case 2: {
+			r -= 0.25;
+			if (r == cMin) turn = 3;
+			break;
+		}
+		case 3: {
+			g += 0.25;
+			if (g == cMax) turn = 4;
+			break;
+		}
+		case 4: {
+			b -= 0.25;
+			if (b == cMin) turn = 5;
+			break;
+		}
+		case 5: {
+			r += 0.25;
+			if (r == cMax) turn = 6;
+			break;
+		}
+		case 6: {
+			g -= 0.25;
+			if (g == cMin) turn = 1;
+			break;
+		}
+	}
+	
+	stroke(floor(r), floor(g), floor(b));
+	
+	d = mult*Math.sqrt(dot);
+	point(d, 0);
+	
+	dot++;
+	resetMatrix();
+	
+	if (d >= width/2 || d >= height/2) {
+		noLoop();
+	}
+}
