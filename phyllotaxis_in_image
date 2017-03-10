@@ -1,0 +1,40 @@
+// BaseAngle: Math.PI/(180/137.5)
+
+var angle;
+var dot;
+var mult;
+var d;
+var cMax = 255;
+var cMin = 180;
+var img;
+
+function preload() {
+    img = loadImage("data/krajobraz.jpg");
+}
+
+function setup() {
+	createCanvas(1920, 1080);
+	background(0);
+	strokeWeight(5);
+	translate(width/2, height/2);
+	
+	angle = Math.PI/(180/137.1);
+	dot = 1;
+	mult = 4;
+    
+	stroke(255);
+	point(0.0);
+    
+    for (var i=0 ; i<75000 ; i++) {
+        translate(width/2, height/2);
+        rotate(angle*dot);
+	
+        d = mult*Math.sqrt(dot);
+        point(d, 0);
+	
+        dot++;
+        resetMatrix();
+    }
+    
+    blend(img, 0, 0, width, height, 0, 0, width, height, DARKEST);
+}
