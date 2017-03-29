@@ -1,0 +1,46 @@
+var angle;
+var len;
+var r;
+var rot = 0;
+
+function setup() {
+	createCanvas(600, 600);
+	angle = Math.PI/50;
+	len = width/2-100;
+	r = 25;
+}
+
+function draw() {
+	background(51);
+	for (var i=0 ; i<Math.PI*2 ; i+=angle) {
+		translate(width/2, height/2);
+		rotate(i);
+		translate(len, 0);
+		
+		var y = Math.sin(rot+i*4)*r;
+		var x = Math.cos(rot+i*4)*r;
+		
+		stroke(255);
+		strokeWeight(5);
+		point(x, y);
+		point(2.3*r, 0);
+		
+		var col = map(x, -25, 25, 0, 255);
+		var b = calcB();
+		
+		stroke(0+col, 255-col, b);
+		strokeWeight(2);
+		line(x, y, r*2.3, 0);
+		
+		resetMatrix();
+	}
+	rot += Math.PI/80;
+}
+
+function calcB() {
+	var nu = frameCount%510;
+	if (nu>255) {
+		nu = 510-nu;
+	}
+	return nu;
+}
