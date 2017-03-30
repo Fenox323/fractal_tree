@@ -2,23 +2,35 @@ var angle;
 var len;
 var r;
 var rot = 0;
+var mul1, mul2, dens;
+var slider1, slider2, slider3;
 
 function setup() {
 	createCanvas(600, 600);
-	angle = Math.PI/50;
 	len = width/2-100;
-	r = 25;
+	r = 40;
+	//slider1 = createSlider(1, 70, 1, 1);
+	//slider2 = createSlider(1, 70, 1, 1);
+	slider3 = createSlider(10, 360, 20, 10);
+	
+	mul1 = 1;
+	mul2 = 1;
 }
 
 function draw() {
 	background(51);
+	dens = slider3.value();
+	angle = Math.PI/dens;
 	for (var i=0 ; i<Math.PI*2 ; i+=angle) {
 		translate(width/2, height/2);
 		rotate(i);
 		translate(len, 0);
+
+		//mul1 = slider1.value();
+		//mul2 = slider2.value();
 		
-		var y = Math.sin(rot+i*4)*r;
-		var x = Math.cos(rot+i*4)*r;
+		var y = Math.sin(rot+i*mul1)*r;
+		var x = Math.cos(rot+i*mul2)*r;
 		
 		stroke(255);
 		strokeWeight(5);
@@ -43,4 +55,9 @@ function calcB() {
 		nu = 510-nu;
 	}
 	return nu;
+}
+
+function mousePressed() {
+	mul1 = random(1, 70);
+	mul2 = random(1, 70);
 }
