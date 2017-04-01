@@ -4,31 +4,35 @@ var r;
 var rot = 0;
 var mul1, mul2, dens;
 var slider1, slider2, slider3;
+var generate, genrandom, multiplier1, multiplier2, density;
 
 function setup() {
-	createCanvas(600, 600);
+	createCanvas(580, 580);
 	len = width/2-100;
 	r = 40;
-	//slider1 = createSlider(1, 70, 1, 1);
-	//slider2 = createSlider(1, 70, 1, 1);
-	slider3 = createSlider(10, 360, 20, 10);
 	
 	mul1 = 1;
 	mul2 = 1;
+	dens = 40;
+	
+	generate = select("#generate");
+	genrandom = select("#genrandom");
+	multiplier1 = select("#multiplier1");
+	multiplier2 = select("#multiplier2");
+	density = select("#density");
+	
+	genrandom.mousePressed(randomF);
+	generate.mousePressed(generateF);
 }
 
 function draw() {
 	background(51);
-	dens = slider3.value();
 	angle = Math.PI/dens;
 	for (var i=0 ; i<Math.PI*2 ; i+=angle) {
 		translate(width/2, height/2);
 		rotate(i);
 		translate(len, 0);
 
-		//mul1 = slider1.value();
-		//mul2 = slider2.value();
-		
 		var y = Math.sin(rot+i*mul1)*r;
 		var x = Math.cos(rot+i*mul2)*r;
 		
@@ -57,7 +61,23 @@ function calcB() {
 	return nu;
 }
 
-function mousePressed() {
-	mul1 = random(1, 70);
-	mul2 = random(1, 70);
+function randomF() {
+	console.clear();
+	mul1 = floor(random(1, 70));
+	mul2 = floor(random(1, 70));
+	if (density.value() <=360 && density.value() >= 10) {
+		dens = density.value();
+	}
+	print("mul1: " + mul1);
+	print("mul2: " + mul2);
+}
+
+function generateF() {
+	if (multiplier1.value() <= 70 && multiplier2.value() <= 70 && multiplier1.value() >= 1 && multiplier2.value() >= 1) {
+		mul1 = multiplier1.value();
+		mul2 = multiplier2.value();
+	}
+	if (density.value() <=360 && density.value() >= 10) {
+		dens = density.value();
+	}
 }
