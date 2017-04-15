@@ -1,0 +1,52 @@
+// https://api.mapbox.com/styles/v1/fenox/cizirrbd4003q2smnlpzj3bg4/static/0,0,0,0,0/1280x800?access_token=pk.eyJ1IjoiZmVub3giLCJhIjoiY2l6aXJrZzdxMDJzYzMzbGJyeXMyZWhkcCJ9.aIs-XCXWF82Nw8NxkrLqzg
+
+var mapimg;
+
+var clat = 0;
+var clon = 0;
+var zoom = 1;
+var ww = 800;
+var hh = 600;
+
+var lat = 51.246452;
+var lon = 22.568445;
+
+function preload() {
+	mapimg = loadImage('https://api.mapbox.com/styles/v1/fenox/cizirrbd4003q2smnlpzj3bg4/static/' + clat + ',' + clon + ',' + zoom + '/' + ww + 'x' + hh + '?access_token=pk.eyJ1IjoiZmVub3giLCJhIjoiY2l6aXJrZzdxMDJzYzMzbGJyeXMyZWhkcCJ9.aIs-XCXWF82Nw8NxkrLqzg');
+}
+
+function mercX(lon) {
+	lon = lon*(Math.PI/180);
+	var a = (256/Math.PI)*pow(2,1);
+	var b = lon + Math.PI;
+	return a*b;
+}
+
+function mercY(lat) {
+	lat = lat*(Math.PI/180);
+	var a = (256/Math.PI)*pow(2,1);
+	var b = Math.tan(Math.PI/4 + lat/2);
+	var c = Math.PI - Math.log(b);
+	return a*c;
+}
+
+function setup() {
+	createCanvas(ww, hh);
+	translate(width/2, height/2);
+	imageMode(CENTER);
+	image(mapimg, 0, 0);
+	
+	var cx = mercX(clon);
+	var cy = mercY(clat);
+	
+	var x = mercX(lon) - cx;
+	var y = mercY(lat) - cy;
+	
+	fill(51);
+	noStroke();
+	ellipse(x, y, 4, 4);
+}
+
+function draw() {
+
+}
