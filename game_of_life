@@ -1,0 +1,115 @@
+
+var press;
+var cNum = 30;
+var cSize;
+var cells = new Array(cNum+2);
+var nextCells = new Array(cNum+2);
+var looped;
+
+function setup() {
+    frameRate(30);
+    createCanvas(600, 600);
+    cSize = width/cNum;
+    
+    press = select("#stop");
+    looped = false;
+    
+    for (var x=0 ; x<cNum+2 ; x++) {
+        cells[x] = new Array(cNum+2);
+        nextCells[x] = new Array(cNum+2);
+        for (var y=0 ; y<cNum+2 ; y++) {
+            cells[x][y] = 0;
+        }
+    }
+    press.mousePressed(startStop);
+}
+
+function draw() {
+    background(51);
+    noFill();
+    stroke(255);
+    strokeWeight(1);
+    
+    for (var x=0 ; x<cNum+2 ; x++) {
+        for (var y=0 ; y<cNum+2 ; y++) {
+            nextCells[x][y] = 0;
+        }
+    }
+    
+    for (var x=1 ; x<=cNum ; x++) {
+        for (var y=1 ; y<=cNum ; y++) {
+            if (cells[x][y]==0) {
+                noFill();
+            }
+            else if (cells[x][y]==1) {
+                fill(255);
+            }
+            rect((x-1)*cSize, (y-1)*cSize, cSize, cSize);
+        }
+    }
+    
+    for (var x=1 ; x<=cNum ; x++) {
+        for (var y=1 ; y<=cNum ; y++) {
+            var sum = 0;
+            if (cells[x-1][y-1]==1) {
+                sum++;
+            }
+            if (cells[x-1][y]==1) {
+                sum++;
+            }
+            if (cells[x-1][y+1]==1) {
+                sum++;
+            }
+            if (cells[x][y-1]==1) {
+                sum++;
+            }
+            if (cells[x][y+1]==1) {
+                sum++;
+            }
+            if (cells[x+1][y-1]==1) {
+                sum++;
+            }
+            if (cells[x+1][y]==1) {
+                sum++;
+            }
+            if (cells[x+1][y+1]==1) {
+                sum++;
+            }
+            
+            if (sum==2 && cells[x][y]==1) {
+                nextCells[x][y]=1;
+            }
+            if (sum==3) {
+                nextCells[x][y]=1;
+            }
+        }
+    }
+    if (looped) {
+        for (var x=0 ; x<cNum+2 ; x++) {
+            arrayCopy(nextCells[x], cells[x]);
+        }
+    }
+}
+
+function mousePressed() {
+    var x = mouseX;
+    var y = mouseY;
+    var cellx = floor(x/cSize)+1;
+    var celly = floor(y/cSize)+1;
+    if (cells[cellx][celly]==0) {    
+        cells[cellx][celly]=1;
+    }
+    else {
+        cells[cellx][celly]=0;
+    }
+    console.log(x, y, cellx, celly);
+}
+
+function startStop() {
+    if (looped) {
+        looped = false;
+    }
+    else {
+        looped = true;
+    }
+}
