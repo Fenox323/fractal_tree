@@ -1,0 +1,40 @@
+
+var mapimg;
+var start;
+var points;
+var strin;
+
+function preload() {
+	mapimg = loadImage("data/map.png");
+}
+
+function setup() {
+	createCanvas(1280, 720);
+	image(mapimg, 0, 0);
+	stroke(51);
+	strokeWeight(1);
+	
+	start = false;
+	points = new Array();
+}
+
+function mousePressed() {
+	if (start) {
+		var x = floor(mouseX);
+		var y = floor(mouseY);
+		if (x>=0 && y>=0 && x<=width && y<=height) {
+			print(x, y);
+			point(x, y);
+			var vec = createVector(x, y);
+			points.push(vec);
+		}
+	}
+}
+
+function end() {
+	strin = "";
+	for (var i=0 ; i<points.length ; i++) {
+		strin += String(points[i].x) + "," + String(points[i].y) + ";";
+	}
+}
+
