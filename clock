@@ -1,19 +1,20 @@
 var mil, sec, minu, hou, r, go, tempS, milplus;
 
 function setup() {
-    createCanvas(600, 600);
+    createCanvas(windowWidth, windowHeight);
     r = min(width, height);
     stroke(255);
     go = false;
     tempS = second();
     milplus = 0;
+    frameRate(60);
 }
 
 function draw() {
     mil = (millis() - milplus)%1000;
     sec = second();
     minu = minute();
-    hou = hour()/2;
+    hou = hour()%12;
     
     if (!go) {
         if (sec>tempS) {
@@ -23,6 +24,7 @@ function draw() {
     }
     
     else {
+    textAlign(CENTER, CENTER);
     background(51);
     fill(100, 255, 120);
     
@@ -31,21 +33,36 @@ function draw() {
     angleMode(RADIANS);
     ellipse(0, 0, r/5, r/5);
     
-    rotate((TWO_PI/1440/2)*(((hou-1)*60)+minu));
+    rotate((TWO_PI/12)*hou);
     translate(0, -r/7*2);
+        fill(150, 200, 100);
     ellipse(0, 0, r/10, r/10);
+        push();
+        fill(255);
+        noStroke();
+        textSize(30);
+        text(hou, 0, 0);
+        pop();
     
-    rotate(-(TWO_PI/1440/2)*(((hou-1)*60)+minu));
-    rotate((TWO_PI/3600)*(((minu-1)*60)+sec));
+    rotate(-(TWO_PI/12)*hou);
+    rotate((TWO_PI/60)*minu);
     translate(0, -r/9);
+        fill(20, 0, 50);
     ellipse(0, 0, r/20, r/20);
+        push();
+        fill(255);
+        noStroke();
+        textSize(10);
+        text(minu, 0, 0);
+        pop();
     
-    rotate(-(TWO_PI/3600)*(((minu-1)*60)+sec));
-    rotate((TWO_PI/60000)*(((sec-1)*1000)+mil));
+    rotate(-(TWO_PI/60)*minu);
+    rotate((TWO_PI/60)*sec);
     translate(0, -r/24);
+        fill(150, 200, 250);
     ellipse(0, 0, r/50, r/50);
     
-    rotate(-(TWO_PI/60000)*(((sec-1)*1000)+mil));
+    rotate(-(TWO_PI/60)*sec);
     rotate((TWO_PI/1000)*mil);
     translate(0, -r/80);
     ellipse(0, 0, r/200, r/200);
