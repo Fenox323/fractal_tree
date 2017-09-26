@@ -1,0 +1,53 @@
+var mil, sec, minu, hou, r, go, tempS, milplus;
+
+function setup() {
+    createCanvas(600, 600);
+    r = min(width, height);
+    stroke(255);
+    go = false;
+    tempS = second();
+    milplus = 0;
+}
+
+function draw() {
+    mil = (millis() - milplus)%1000;
+    sec = second();
+    minu = minute();
+    hou = hour()/2;
+    
+    if (!go) {
+        if (sec>tempS) {
+            milplus = millis();
+            go = true;
+        }
+    }
+    
+    else {
+    background(51);
+    fill(100, 255, 120);
+    
+    translate(width/2, height/2);
+    ellipseMode(CENTER);
+    angleMode(RADIANS);
+    ellipse(0, 0, r/5, r/5);
+    
+    rotate((TWO_PI/1440/2)*(((hou-1)*60)+minu));
+    translate(0, -r/7*2);
+    ellipse(0, 0, r/10, r/10);
+    
+    rotate(-(TWO_PI/1440/2)*(((hou-1)*60)+minu));
+    rotate((TWO_PI/3600)*(((minu-1)*60)+sec));
+    translate(0, -r/9);
+    ellipse(0, 0, r/20, r/20);
+    
+    rotate(-(TWO_PI/3600)*(((minu-1)*60)+sec));
+    rotate((TWO_PI/60000)*(((sec-1)*1000)+mil));
+    translate(0, -r/24);
+    ellipse(0, 0, r/50, r/50);
+    
+    rotate(-(TWO_PI/60000)*(((sec-1)*1000)+mil));
+    rotate((TWO_PI/1000)*mil);
+    translate(0, -r/80);
+    ellipse(0, 0, r/200, r/200);
+    }
+}
