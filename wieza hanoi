@@ -1,0 +1,49 @@
+const lKlockow = 5;
+let klocki = [];
+const positions = [3];
+
+function setup() {
+    createCanvas(
+        windowWidth,
+        windowHeight);
+    
+    for (let i=0 ; i<3 ; i++) {
+        positions[i] = width/4*(i+1);
+    }
+    
+    for (let i=0 ; i<lKlockow ; i++) {
+        klocki.push(new Klocek(i+1, 0, lKlockow-1-i));
+    }
+}
+
+function draw() {
+    background(51);
+    stroke(255);
+    strokeWeight(10);
+    
+    line(width/8, height/4*3, width/8*7, height/4*3);
+    for (let i=0 ; i<3 ; i++) {
+        line(width/4 * (i+1), height/3, width/4 * (i+1), height/4*3);
+    }
+    
+    stroke(255, 200, 100, 160);
+    for (let i=0 ; i<lKlockow ; i++) {
+        line(klocki[i].posX-((klocki[i].siz+1)*width/10/lKlockow), klocki[i].posY, klocki[i].posX+((klocki[i].siz+1)*width/10/lKlockow), klocki[i].posY);
+    }
+    
+    for (let i=0 ; i<3 ; i++) {
+        
+    }
+}
+
+function mousePressed() {
+    if (mouseX)
+}
+
+class Klocek {
+    constructor(siz, posX, posY) {
+        this.siz = siz;
+        this.posX = positions[posX];
+        this.posY = ((height/4*3)-10)-(10*posY);
+    }
+}
