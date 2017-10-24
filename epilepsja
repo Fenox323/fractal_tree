@@ -1,0 +1,44 @@
+let bubbles = [];
+
+function setup() {
+    createCanvas(
+        windowWidth-4,
+        windowHeight-4);
+    
+    for (let i=0 ; i<1200 ; i++) {
+        bubbles.push(new Bubble(random(0, width), random(0, height), random(1, 20)));
+    }
+}
+
+function draw() {
+    background(floor(random(0,255)), floor(random(0,255)), floor(random(0,255)));
+    for (let i=0 ; i<bubbles.length ; i++) {
+        bubbles[i].move();
+        bubbles[i].show();
+    }
+}
+
+class Bubble {
+    constructor(x, y, r) {
+        this.x = floor(x);
+        this.y = floor(y);
+        this.r = floor(r);
+        this.colR = floor(random(0,255));
+        this.colG = floor(random(0,255));
+        this.colB = floor(random(0,255));
+        this.alph = floor(random(100,255));
+    }
+    move() {
+        this.x += floor(random(-4, 5));
+        this.y += floor(random(-4, 5));
+        this.colR = floor(random(0,255));
+        this.colG = floor(random(0,255));
+        this.colB = floor(random(0,255));
+        this.alph = floor(random(100,255));
+    }
+    show() {
+        stroke(150);
+        fill(this.colR, this.colG, this.colB, this.alph);
+        ellipse(this.x, this.y, this.r);
+    }
+}
