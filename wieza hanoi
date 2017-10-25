@@ -1,49 +1,78 @@
+// ZMIENNE ----------------------------------------------------------------------------------------------------------------
 const lKlockow = 5;
 let klocki = [];
 const positions = [3];
+const slupki = [3];
 
+// FUNKCJE ----------------------------------------------------------------------------------------------------------------
 function setup() {
     createCanvas(
         windowWidth,
         windowHeight);
     
     for (let i=0 ; i<3 ; i++) {
-        positions[i] = width/4*(i+1);
+        positions[i] = i;
+        slupki[i] = new Slupek(i);
     }
     
     for (let i=0 ; i<lKlockow ; i++) {
-        klocki.push(new Klocek(i+1, 0, lKlockow-1-i));
+        klocki.push(new Klocek(i, 0, lKlockow-1-i));
     }
+    
+    // WPROWADZENIE KLOCKOW NA SLUPKI ----------------
+    slupki[0].kloc = klocki;
 }
 
 function draw() {
     background(51);
     stroke(255);
-    strokeWeight(10);
+    strokeWeight(20);
     
     line(width/8, height/4*3, width/8*7, height/4*3);
     for (let i=0 ; i<3 ; i++) {
         line(width/4 * (i+1), height/3, width/4 * (i+1), height/4*3);
     }
     
-    stroke(255, 200, 100, 160);
-    for (let i=0 ; i<lKlockow ; i++) {
-        line(klocki[i].posX-((klocki[i].siz+1)*width/10/lKlockow), klocki[i].posY, klocki[i].posX+((klocki[i].siz+1)*width/10/lKlockow), klocki[i].posY);
-    }
-    
-    for (let i=0 ; i<3 ; i++) {
-        
+    stroke(255, 100, 100, 170);
+    for (let i=0 ; i<klocki.length ; i++) {
+        var x = width/4 + klocki[i].posX*width/4;
+        var sx = width/8/lKlockow;
+        var sy = height/4*3 - height/2/lKlockow;
+        line (x - (sx + klocki[i].siz * sx), sy - height/2/lKlockow * klocki[i].posY,
+              x + (sx + klocki[i].siz * sx), sy - height/2/lKlockow * klocki[i].posY);
     }
 }
 
 function mousePressed() {
-    if (mouseX)
+    if (mouseY>height/3 && mouseY<height/4*3) {
+        if (mouseX>width/8 && mouseX<width/8*3) {
+            console.log("1")
+        }
+        else if (mouseX>width/8*3 && mouseX<width/8*5) {
+            console.log("2")
+        }
+        else if (mouseX>width/8*5 && mouseX<width/8*7) {
+            console.log("3")
+        }
+    }
 }
 
+function pickUp(siz) {
+    
+}
+
+// KLASY ----------------------------------------------------------------------------------------------------------------
 class Klocek {
     constructor(siz, posX, posY) {
         this.siz = siz;
-        this.posX = positions[posX];
-        this.posY = ((height/4*3)-10)-(10*posY);
+        this.posX = posX;
+        this.posY = posY;
+    }
+}
+
+class Slupek {
+    constructor(pos) {
+        this.pos = pos;
+        this.kloc = [];
     }
 }
