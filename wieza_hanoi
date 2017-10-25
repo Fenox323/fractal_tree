@@ -113,7 +113,7 @@ function draw() {
         }
 
     // KLOCKI
-        stroke(255, 100, 100);
+        stroke(255, 40, 40);
         for (let i = 0; i < klocki.length; i++) {
             var x = width / 4 + klocki[i].posX * width / 4;
             var sx = width / 8 / (lKlockow+1);
