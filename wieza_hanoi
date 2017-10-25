@@ -1,0 +1,249 @@
+// ZMIENNE ----------------------------------------------------------------------------------------------------------------
+let up, klocki, sWeight, won, pickedUp, kX, kY, ksX, ksY, ruchy, pX, pY, ps, mX, mY, mS, niedozw;
+
+const slupki = [];
+let lKlockow = 3;
+
+// FUNKCJE ----------------------------------------------------------------------------------------------------------------
+function setup() {
+    // CANVAS
+        createCanvas(
+            windowWidth,
+            windowHeight);
+        frameRate(30);
+
+    // DEKLARACJE
+        klocki = [];
+        won = false;
+        pickedUp = false;
+        niedozw = false;
+        sWeight = height / 24;
+        ruchy = 0;
+
+        // reset
+        kX = width / 20;
+        kY = height / 9;
+        ksX = width / 14;
+        ksY = height / 22;
+
+        // (minus)
+        pX = kX;
+        pY = height / 24;
+        pS = ksX / 3;
+
+        // (plus)
+        mX = kX + ksX;
+        mY = pY;
+        mS = pS;
+
+        for (let i = 0; i < 3; i++) {
+            slupki[i] = new Slupek();
+        }
+
+        for (let i = 0; i < lKlockow; i++) {
+            klocki.push(new Klocek(i, 0, lKlockow - 1 - i));
+        }
+
+    slupki[0].kloc = klocki.slice();
+}
+
+
+function draw() {
+    background(51);
+    stroke(255);
+    strokeWeight(sWeight);
+
+    // PLUS
+        push();
+        fill((lKlockow == 3) ? 185 : 255);
+        noStroke();
+        rect(pX, pY, pS, pS);
+
+        fill((lKlockow == 3) ? 70 : 140);
+        rect(pX + pS / 4, pY + pS / 8 * 3, pS / 2, pS / 4);
+        pop();
+
+    // MINUS
+        push();
+        fill((lKlockow == 8) ? 185 : 255);
+        noStroke();
+        rect(mX, mY, mS, mS);
+
+        fill((lKlockow == 8) ? 70 : 140);
+        rect(mX + mS / 4, mY + mS / 8 * 3, mS / 2, mS / 4);
+        rect(mX + mS / 8 * 3, mY + mS / 4, mS / 4, mS / 2);
+        pop();
+
+    // LICZBA KLOCKOW
+        push();
+        textAlign(CENTER, CENTER);
+        textSize(height / 34);
+        fill(255);
+        noStroke();
+        text(lKlockow, pX + ksX / 3 * 2, pY + pS / 2);
+        pop();
+
+    // PRZYCISK RESET
+        push();
+        fill(255);
+        strokeWeight(1);
+        stroke(0);
+        rect(kX, kY, ksX, ksY);
+
+        textAlign(CENTER, CENTER);
+        textSize(height / 50);
+        fill(0);
+        noStroke();
+        text("reset", kX + ksX / 2, kY + ksY / 2);
+        pop();
+
+    // LICZBA RUCHÓW
+        push();
+        textAlign(LEFT);
+        fill(255);
+        noStroke();
+        textSize(height / 50);
+        text("liczba ruchów: " + ruchy, kX, kY + ksY * 1.5);
+        pop();
+
+    // SLUPKI
+        line(width / 8, height / 4 * 3, width / 8 * 7, height / 4 * 3);
+        for (let i = 0; i < 3; i++) {
+            line(width / 4 * (i + 1), height / 3, width / 4 * (i + 1), height / 4 * 3);
+        }
+
+    // KLOCKI
+        stroke(255, 100, 100);
+        for (let i = 0; i < klocki.length; i++) {
+            var x = width / 4 + klocki[i].posX * width / 4;
+            var sx = width / 8 / (lKlockow+1);
+            var sy = height / 4 * 3 - sWeight;
+            line(x - (sx + klocki[i].siz * sx), sy - sWeight * klocki[i].posY,
+                x + (sx + klocki[i].siz * sx), sy - sWeight * klocki[i].posY);
+        }
+
+    // NIEDOZWOLONY RUCH
+        if (niedozw) {
+            push();
+            fill(255, 40, 40);
+            noStroke();
+            textAlign(LEFT);
+            textSize(height / 80);
+            text("Niedozwolony ruch", kX, kY + ksY * 2.5);
+            pop();
+        }
+
+    // ZWYCIESTWO --------
+        if (slupki[2].kloc[lKlockow - 1]) won = true;
+        if (won) tekstZ();
+}
+
+
+function mousePressed() {
+    // ZWYCIESTWO
+        if (won) {
+            setup();
+            loop();
+        }
+
+    // PODNOSZENIE/UPUSZCZANIE
+        else if (mouseY > height / 3 && mouseY < height / 4 * 3) {
+            if (mouseX > width / 8 && mouseX < width / 8 * 3) {
+                pickUp(0);
+            }
+            else if (mouseX > width / 8 * 3 && mouseX < width / 8 * 5) {
+                pickUp(1);
+            }
+            else if (mouseX > width / 8 * 5 && mouseX < width / 8 * 7) {
+                pickUp(2);
+            }
+        }
+
+    // RESET
+        else if (mouseX >= kX && mouseX <= kX + ksX && mouseY >= kY && mouseY <= kY + ksY) {
+            setup();
+        }
+
+    // MINUS
+        else if (mouseX >= pX && mouseX <= pX + pS && mouseY >= pY && mouseY <= pY + pS) {
+            if (lKlockow > 3) {
+                lKlockow--;
+                setup();
+            }
+        }
+
+    // PLUS
+        else if (mouseX >= mX && mouseX <= mX + mS && mouseY >= mY && mouseY <= mY + mS) {
+            if (lKlockow < 9) {
+                lKlockow++;
+                setup();
+            }
+        }
+}
+
+
+// TEKST ZWYCIESTWA -------
+function tekstZ() {
+    textAlign(CENTER);
+    textSize(height/24);
+    stroke(51);
+    fill(255);
+
+    text("Zwycięstwo!", width / 2, height / 7);
+    textSize(height/65);
+    text("Naciśnij myszą aby zagrać jeszcze raz", width / 2, height / 4 - 15);
+
+    noLoop();
+}
+
+
+function pickUp(pos) {
+    if (!won) {
+        // PODNOSZENIE KLOCKA --------
+        if (!pickedUp) {
+            if (slupki[pos].kloc.length > 0) {
+                up = slupki[pos].kloc.shift();
+                up.posY = height / 2 / sWeight - 3;
+                pickedUp = true;
+            }
+        }
+        // OPUSZCZANIE KLOCKA --------
+        else {
+            if (slupki[pos].kloc.length == 0) {
+                if (up.posX != pos) ruchy++;
+                up.posX = pos;
+                up.posY = 0;
+                slupki[pos].kloc.unshift(up);
+                pickedUp = false;
+                niedozw = false;
+            }
+            else if (slupki[pos].kloc[0].siz > up.siz) {
+                if (up.posX != pos) ruchy++;
+                up.posX = pos;
+                up.posY = slupki[pos].kloc[0].posY + 1;
+                slupki[pos].kloc.unshift(up);
+                pickedUp = false;
+                niedozw = false;
+            }
+            else {
+                niedozw = true;
+            }
+        }
+    }
+}
+
+
+// KLASY ----------------------------------------------------------------------------------------------------------------
+class Klocek {
+    constructor(siz, posX, posY) {
+        this.siz = siz;
+        this.posX = posX;
+        this.posY = posY;
+    }
+}
+
+class Slupek {
+    constructor() {
+        this.kloc = [];
+    }
+}
