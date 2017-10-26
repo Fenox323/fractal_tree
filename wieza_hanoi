@@ -53,7 +53,7 @@ function draw() {
     stroke(255);
     strokeWeight(sWeight);
 
-    // PLUS
+    // MINUS
         push();
         fill((lKlockow == 3) ? 185 : 255);
         noStroke();
@@ -63,13 +63,13 @@ function draw() {
         rect(pX + pS / 4, pY + pS / 8 * 3, pS / 2, pS / 4);
         pop();
 
-    // MINUS
+    // PLUS
         push();
-        fill((lKlockow == 8) ? 185 : 255);
+        fill((lKlockow == 10) ? 185 : 255);
         noStroke();
         rect(mX, mY, mS, mS);
 
-        fill((lKlockow == 8) ? 70 : 140);
+        fill((lKlockow == 10) ? 70 : 140);
         rect(mX + mS / 4, mY + mS / 8 * 3, mS / 2, mS / 4);
         rect(mX + mS / 8 * 3, mY + mS / 4, mS / 4, mS / 2);
         pop();
@@ -174,7 +174,7 @@ function mousePressed() {
 
     // PLUS
         else if (mouseX >= mX && mouseX <= mX + mS && mouseY >= mY && mouseY <= mY + mS) {
-            if (lKlockow < 9) {
+            if (lKlockow < 10) {
                 lKlockow++;
                 setup();
             }
@@ -186,7 +186,7 @@ function mousePressed() {
 function tekstZ() {
     textAlign(CENTER);
     textSize(height/24);
-    stroke(51);
+    noStroke();
     fill(255);
 
     text("Zwycięstwo!", width / 2, height / 7);
@@ -207,7 +207,7 @@ function pickUp(pos) {
                 pickedUp = true;
             }
         }
-        // OPUSZCZANIE KLOCKA --------
+        // UPUSZCZANIE KLOCKA --------
         else {
             if (slupki[pos].kloc.length == 0) {
                 if (up.posX != pos) ruchy++;
