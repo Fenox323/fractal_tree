@@ -1,0 +1,42 @@
+let circles = [];
+
+function setup() {
+    createCanvas(windowWidth-5,
+                 windowHeight-5);
+    
+    for (let i=0 ; i<50 ; i++) {
+        circles[i] = new Circle(random(width), random(height), random(30, 100));
+    }
+}
+
+function draw() {
+    background(51);
+    for (let i=0 ; i<circles.length ; i++) {
+        for (let j=i+1 ; j<circles.length ; j++) {
+            let d = dist(circles[i].x, circles[i].y, circles[j].x, circles[j].y);
+            if (d<circles[i].r/2+circles[j].r/2) {
+                circles[i].bright = 230;
+                circles[j].bright = 230;
+            }
+        }
+        circles[i].show();
+    }
+}
+
+class Circle {
+    constructor(x_, y_, r_ = 20) {
+        this.x = x_;
+        this.y = y_;
+        this.r = r_;
+        this.bright = 80;
+    }
+    show() {
+        push();
+        ellipseMode(CENTER);
+        fill(this.bright);
+        stroke(255);
+        strokeWeight(2);
+        ellipse(this.x, this.y, this.r);
+        pop();
+    }
+}
