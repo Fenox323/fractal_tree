@@ -1,0 +1,37 @@
+let plik, space, cStart, tWidth, fCount, back;
+
+function preload() {
+    plik = "testing1 testing2 testing3 testing4";
+}
+
+function setup() {
+    createCanvas(200, 50);
+    space = 7;
+    cStart = space;
+    textSize(20);
+    tWidth = textWidth(plik);
+    fCount = 0;
+    back = false;
+    print(plik);
+}
+
+function draw() {
+    background(51);
+    textAlign(LEFT, CENTER);
+    fill(255);
+    noStroke();
+    text(plik, cStart, height/2);
+    
+    if (fCount > 80) {
+        if (cStart+tWidth >= width-space && !back) {
+            cStart -= 0.5;
+        } else if (cStart <= space && back) {
+            cStart += 0.8;
+        } else {
+            fCount = 0;
+            if (back) back = false;
+            else back = true;
+        }
+    }
+    fCount++;
+}
