@@ -1,0 +1,69 @@
+let img, x, y, dir, speed;
+
+function setup() {
+    pixelDensity(1);
+    createCanvas(230, 230);
+    
+    img = createImage(230, 230);
+    img.loadPixels();
+    for (let i=0 ; i<width ; i++) {
+    for (let j=0 ; j<height ; j++) {
+        if (i<4 || j<4) img.set(i, j, 255);
+        else img.set(i, j, 0);
+    }
+    }
+    img.updatePixels();
+    
+    dir = 3;
+    x = width/2;
+    y = height/2;
+    speed = 1000;
+}
+
+function draw() {
+    img.loadPixels();
+    for (let i=0 ; i<speed ; i++) {
+        if (img.get(x, y)[0] == 0) {
+            changeDir(true);
+            img.set(x, y, 255);
+            move();
+        } else {
+            changeDir(false);
+            img.set(x, y, 0);
+            move();
+        }
+        img.updatePixels();
+    }
+    image(img, 0, 0);
+}
+
+function changeDir(plus) {
+    if (plus) {
+        dir++;
+        if (dir==4) dir = 0;
+    } else {
+        dir--;
+        if (dir==-1) dir = 3;
+    }
+}
+
+function move() {
+    switch(dir) {
+        case 0: { y--;
+                 break;
+                }
+        case 1: { x++;
+                 break;
+                }
+        case 2: { y++;
+                 break;
+                }
+        case 3: { x--;
+                 break;
+                }
+              }
+    if (x>=width) x=4;
+    else if (x<4) x=width-1;
+    if (y>=height) y=4;
+    else if (y<4) y=height-1;
+}
