@@ -1,80 +1,85 @@
-let x, y, x1, x2, y1, y2, ang1, ang2, l1, l2, m1, m2, ang_v1, ang_v2, ang_a1, ang_a2;
-const g = 1;
-let buffer;
-let px2 = -1;
-let py2 = -1;
+
+let x, y, x1, x2, y1, y2, ang1, ang2, l1, l2, m1, m2, ang_v1, ang_v2, ang_a1, ang_a2, buffer, points;
+let g = 1;
 
 function setup() {
-    createCanvas(600, 600);
+    createCanvas(1280, 720);
     angleMode(RADIANS);
-    
-    x = 300;
-    y = 50;
-    
+
+    x = width/2;
+    y = height/2;
+
     buffer = createGraphics(width, height);
     buffer.background(200);
     buffer.translate(x, y);
-    
+
     ang1 = random(HALF_PI);
     ang2 = random(HALF_PI);
     l1 = random(70, 200);
     l2 = random(70, 200);
-    m1 = random(10, 50);
-    m2 = random(10, 50);
+    m1 = random(1, 5);
+    m2 = random(1, 5);
     ang_v1 = 0;
     ang_v2 = 0;
     ang_a1 = 0;
     ang_a2 = 0;
+    points = [];
 }
 
 function draw() {
-    background(200);
+    background(255);
     imageMode(CORNER);
     image(buffer, 0, 0, width, height);
-    
+
     let num1 = -g * (2 * m1 + m2) * sin(ang1);
   let num2 = -m2 * g * sin(ang1 - 2 * ang2);
   let num3 = -2 * sin(ang1 - ang2) * m2;
   let num4 = ang_v2 * ang_v2 * l2 + ang_v1 * ang_v1 * l1 * cos(ang1 - ang2);
   let den = l1 * (2 * m1 + m2 - m2 * cos(2 * ang1 - 2 * ang2));
   ang_a1 = (num1 + num2 + num3 * num4) / den;
-    
+
     num1 = 2 * sin(ang1 - ang2);
   num2 = (ang_v1 * ang_v1 * l1 * (m1 + m2));
   num3 = g * (m1 + m2) * cos(ang1);
   num4 = ang_v2 * ang_v2 * l2 * m2 * cos(ang1 - ang2);
   den = l2 * (2 * m1 + m2 - m2 * cos(2 * ang1 - 2 * ang2));
-  ang_a2 = (num1 * (num2 + num3 + num4)) / den  
-    
+  ang_a2 = (num1 * (num2 + num3 + num4)) / den
+
     translate(x, y);
-    
+
     x1 = l1*sin(ang1);
     y1 = l1*cos(ang1);
     x2 = x1 + l2*sin(ang2);
     y2 = y1 + l2*cos(ang2);
-    
+    points.push({x: x2, y: y2});
+
     ang_v1 += ang_a1;
     ang_v2 += ang_a2;
-    
-//    ang_v1 *= 0.99;
-//    ang_v2 *= 0.99;
-    
+
     ang1 += ang_v1;
     ang2 += ang_v2;
-    
+
     strokeWeight(2);
     stroke(0);
     fill(0);
     line(0, 0, x1, y1);
     line(x1, y1, x2, y2);
-    ellipse(x1, y1, m1/2, m1/2);
-    ellipse(x2, y2, m2/2, m2/2);
-    
+    ellipse(x1, y1, m1*5, m1*5);
+    ellipse(x2, y2, m2*5, m2*5);
+
     buffer.stroke(0);
-    if (frameCount > 2) {
-        buffer.line(px2, py2, x2, y2);
+    if (frameCount > 1) {
+        buffer.background(255);
+        buffer.stroke(0);
+        buffer.strokeWeight(2);
+        let time = -1;
+        if (points.length>327) points.splice(0, 1);
+        if (points.length>200) time = points.length-200;
+        for (let i=points.length-1 ; i>0 ; i--) {
+            if (i<=time) {
+                buffer.stroke(0, 0, 0, 255-(time-i)*2);
+            }
+            buffer.line(points[i].x, points[i].y, points[i-1].x, points[i-1].y);
+        }
     }
-    
-    px2 = x2;
-    py2 = y2;
 }
