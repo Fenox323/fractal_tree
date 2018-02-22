@@ -17,8 +17,8 @@ function setup() {
     ang2 = random(HALF_PI);
     l1 = random(70, 200);
     l2 = random(70, 200);
-    m1 = random(1, 5);
-    m2 = random(1, 5);
+    m1 = random(4, 7);
+    m2 = 1;
     ang_v1 = 0;
     ang_v2 = 0;
     ang_a1 = 0;
