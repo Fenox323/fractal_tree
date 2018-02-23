@@ -1,0 +1,130 @@
+let rows = 180;
+let squares = [];
+let currX = 1;
+let currY = 1;
+let road = [];
+let found = false;
+let walls = [];
+let way = [];
+let add = false;
+let cords;
+let buffer;
+
+function setup() {
+    createCanvas(900, 900);
+    buffer = createGraphics(width, height);
+    buffer.background(0);
+    buffer.stroke(255);
+    buffer.strokeWeight(1);
+    for (let i=0 ; i<rows ; i++) {
+        for (let j=0 ; j<rows ; j++) {
+            buffer.line(i*width/rows    , j*height/rows    , (i+1)*width/rows, j*height/rows    );
+            buffer.line((i+1)*width/rows, j*height/rows    , (i+1)*width/rows, (j+1)*height/rows);
+            buffer.line((i+1)*width/rows, (j+1)*height/rows, i*width/rows    , (j+1)*height/rows);
+            buffer.line(i*width/rows    , (j+1)*height/rows, i*width/rows    , j*height/rows    );
+        }
+    }
+    for (let i=0 ; i<rows+2 ; i++) {
+        squares[i] = [];
+        for (let j=0 ; j<rows+2 ; j++) {
+            squares[i][j] = (i==0 || i==rows+1 || j==0 || j==rows+1)?true:false
+        }
+    }
+    for (let i=0 ; i<rows ; i++) {
+        walls[i] = [];
+        for (let j=0 ; j<rows ; j++) {
+            walls[i][j] = {up: true, right: true, left: true, right: true}
+        }
+    }
+    squares[1][1] = true;
+    road.push({x: currX, y: currY});
+}
+
+function draw() {
+    image(buffer, 0, 0, width, height);
+    noStroke();
+    fill(0, 255, 0);
+    rect((currX-1)*width/rows+1, (currY-1)*height/rows+1, width/rows-2, height/rows-2);
+    buffer.stroke(0);
+        found = false;
+        let side = (random()>0.5)?1:-1;
+        let rand = floor(random(4));
+        for (let i=0 ; i<4 ; i++) {
+            if (rand % 4 == 0) {
+                if (!squares[currX][currY-1]) {
+                    if (add) {
+                        road.push(cords);
+                        add = false;
+                    }
+                    buffer.line((currX-1)*width/rows, (currY-1)*height/rows, (currX)*width/rows, (currY-1)*height/rows);
+                    currY--;
+                    squares[currX][currY] = true;
+                    road.push({x: currX, y: currY});
+                    found = true;
+                    break;
+                }
+            } else if (rand % 4 == 1) {
+                if (!squares[currX+1][currY]) {
+                    if (add) {
+                        road.push(cords);
+                        add = false;
+                    }
+                    buffer.line((currX)*width/rows, (currY-1)*height/rows, (currX)*width/rows, (currY)*height/rows);
+                    currX++;
+                    squares[currX][currY] = true;
+                    road.push({x: currX, y: currY});
+                    found = true;
+                    break;
+                }
+            } else if (rand % 4 == 2) {
+                if (!squares[currX][currY+1]) {
+                    if (add) {
+                        road.push(cords);
+                        add = false;
+                    }
+                    buffer.line((currX)*width/rows, (currY)*height/rows, (currX-1)*width/rows, (currY)*height/rows);
+                    currY++;
+                    squares[currX][currY] = true;
+                    road.push({x: currX, y: currY});
+                    found = true;
+                    break;
+                }
+            } else if (rand % 4 == 3) {
+                if (!squares[currX-1][currY]) {
+                    if (add) {
+                        road.push(cords);
+                        add = false;
+                    }
+                    buffer.line((currX-1)*width/rows, (currY)*height/rows, (currX-1)*width/rows, (currY-1)*height/rows);
+                    currX--;
+                    squares[currX][currY] = true;
+                    road.push({x: currX, y: currY});
+                    found = true;
+                    break;
+                }
+            }
+            rand += side;
+        }
+    if (!found) {
+        if (road.length>0) {
+            if (road.length>way.length) {
+                way = road.slice();
+            }
+            cords = road.pop();
+            add = true;
+            currX = cords.x;
+            currY = cords.y;
+        } else {
+            print("DONE");
+            stroke(255, 0, 255);
+            strokeWeight(1);
+            for (let i=1 ; i<way.length ; i++) {
+                line(width/rows*((way[i].x-1)+0.5), height/rows*((way[i].y-1)+0.5), width/rows*((way[i-1].x-1)+0.5), height/rows*((way[i-1].y-1)+0.5));
+            }
+            fill(255, 0, 0);
+            noStroke();
+            rect((way[way.length-1].x-1)*width/rows+1, (way[way.length-1].y-1)*height/rows+1, width/rows-2, height/rows-2);
+            noLoop();
+        }
+    }
+}
